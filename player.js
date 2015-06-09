@@ -1,7 +1,33 @@
-var inquirer = require('inquirer')
+var inquirer = require('inquirer');
 
-var game = require('./game.source')
+var game = require('./game.source');
 
+var nextQuestion = function(answer) {
+	var answerTitle = Object.keys(answer)[0];
+	var prevNode = game.getNode(answerTitle);
+	var node = prevNode.route(answer[answerTitle]);
+	if (node.connections.length === 0) {
+		return console.log(node.text);
+	}
+
+	inquirer.prompt([
+		{
+			type: "list",
+			name: node.title,
+			message: node.text,
+			choices: node.getConnectionStrings()
+		}]
+	, nextQuestion);
+};
+
+inquirer.prompt([
+	{
+		type: "list",
+		name: game.startingPoint.title,
+		message: game.startingPoint.text,
+		choices: game.startingPoint.getConnectionStrings()
+	}],
+	nextQuestion);
 /*
 
 This file has no test specs. It might be a tricky one. You need to look at 
