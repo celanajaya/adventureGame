@@ -4,8 +4,9 @@ var Game = require('./game')
 
 var g = new Game()
 
+g.addNode('name', 'what is your name?')
 
-g.addNode('direction', 'Welcome. Do you choose to go left, or right?')
+g.addNode('direction', 'Welcome <%= name %>. Do you choose to go left, or right?')
 
 g.addNode('leftResp', 'Ah, good choice. Good choice. Now what color is the best?')
 
@@ -14,6 +15,8 @@ g.addNode('rightResp', 'There be dragons there.')
 
 g.addNode('yep', 'that is true')
 g.addNode('wrong', 'you would be incorrect, friend')
+
+g.connect('name', 'direction')
 
 g.connect('direction', 'leftResp', 'left')
 g.connect('direction', 'rightResp', 'right')

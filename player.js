@@ -1,20 +1,22 @@
 var inquirer = require('inquirer');
-
+var ejs = require('ejs');
 var game = require('./game.source');
-
+game.responses = {};
 var nextQuestion = function(answer) {
 	var answerTitle = Object.keys(answer)[0];
+	game.responses[answerTitle] = answer[answerTitle];
 	var prevNode = game.getNode(answerTitle);
 	var node = prevNode.route(answer[answerTitle]);
+	var message = ejs.render(node.text, game.responses);
 	if (node.connections.length === 0) {
-		return console.log(node.text);
+		return console.log(message);
 	}
 
 	inquirer.prompt([
 		{
 			type: "list",
 			name: node.title,
-			message: node.text,
+			message: message,
 			choices: node.getConnectionStrings()
 		}]
 	, nextQuestion);
@@ -22,10 +24,9 @@ var nextQuestion = function(answer) {
 
 inquirer.prompt([
 	{
-		type: "list",
+		type: "input",
 		name: game.startingPoint.title,
-		message: game.startingPoint.text,
-		choices: game.startingPoint.getConnectionStrings()
+		message: game.startingPoint.text
 	}],
 	nextQuestion);
 /*

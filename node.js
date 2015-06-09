@@ -15,6 +15,9 @@ Node.prototype.connect = function(node, condition) {
 };
 
 Node.prototype.route = function(condition) {
+	if (this.connections.length === 1) {
+		return this.connections[0].nextNode;
+	}
 	for (var i = 0; i < this.connections.length; i++) {
 		if (this.connections[i].condition === condition) {
 			return this.connections[i].nextNode;
